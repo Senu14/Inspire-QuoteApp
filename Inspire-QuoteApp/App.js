@@ -2,15 +2,18 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { DailyQuoteCard } from './script';
 import { Camera, CameraType } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 
 export default function App() {
   const [hasCameraPermissions, setHasCameraPermission] = useState(null)
   const [type, setType] = useState(Camera.Constants.Type.back)
+  const [image, setImage] = useState(null)
+  const cameraRef = useRef(null)
 
-  const toggleCameraType = {} => {
+  const toggleCameraType = () => {
     setType(current => {
+      console.log(current);
       current === CameraType.back ? CameraType.front : CameraType.back
     })
   }
@@ -24,6 +27,23 @@ export default function App() {
        })()
   })
 
+  const savePicture = async () => {
+
+  }
+
+  const takePicture = async () => {
+    if(cameraRef) {
+      try {
+        const data = awaitcameraRef.current.takePictureAsync()
+        setImage(data.uri)
+      }
+      catch(err) {
+        console.error(err)
+
+      }
+    }
+  }
+
   return (
     <View style={styles.container}>
       <DailyQuoteCard />
@@ -35,7 +55,13 @@ export default function App() {
           <TouchableOpacity>
             <text>Tag billede</text>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={
+            () => {setType(
+                type === CameraType.back ? CameraType.front : CameraType.back
+              )
+
+            }
+          }>
             <text>Skift skærm</text>
           </TouchableOpacity>
           <TouchableOpacity>
